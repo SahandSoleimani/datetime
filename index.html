@@ -1,95 +1,130 @@
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@500&display=swap" rel="stylesheet">
-
-<script>
-  const timeElement = document.querySelector(".time");
-const dateElement = document.querySelector(".date");
-
-/**
- * @param {Date} date
- */
-function formatTime(date) {
-  const hours12 = date.getHours() % 12 || 12;
-  const minutes = date.getMinutes();
-  const isAm = date.getHours() < 12;
-
-  return `${hours12.toString().padStart(2, "0")}:${minutes
-    .toString()
-    .padStart(2, "0")} ${isAm ? "AM" : "PM"}`;
-}
-
-/**
- * @param {Date} date
- */
-function formatDate(date) {
-  const DAYS = [
-    "Sunday",
-    "Monday",
-    "Tuesday",
-    "Wednesday",
-    "Thursday",
-    "Friday",
-    "Saturday"
-  ];
-  const MONTHS = [
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December"
-  ];
-
-  return `${DAYS[date.getDay()]}, ${
-    MONTHS[date.getMonth()]
-  } ${date.getDate()} ${date.getFullYear()}`;
-}
-
-setInterval(() => {
-  const now = new Date();
-
-  timeElement.textContent = formatTime(now);
-  dateElement.textContent = formatDate(now);
-}, 200);
-</script>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Analog Clock</title>
 
 <style>
-  body {
-  background: #222222;
+ body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #091921;
 }
 
-.datetime {
-  font-size: 16px;
-  padding: 24px;
-  color: #ffffff;
-  background: #444444;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.25);
-  border-radius: 4px;
-  border-right: 10px #009578 solid;
-  width: 400px;
-  font-weight: 500;
-  font-family: "Inter", sans-serif;
+.clock {
+  width: 300px;
+  height: 300px;
+  border-radius: 50%;
+  background-image: url("clock.png");
+  background-size: cover;
+  display: flex;
+ 
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 -15px 15px rgba(255, 255, 255, 0.05),
+    inset 0 -15px 15px rgba(255, 255, 255, 0.05), 0 15px 15px rgba(0, 0, 0, 0.3),
+    inset 0 15px 15px rgba(0, 0, 0, 0.3);
 }
 
-.time {
-  font-size: 3em;
-  color: #00ffcc;
+.clock::before {
+  content: "";
+  width: 15px;
+  height: 15px;
+  position: absolute;
+  background-color: #fff;
+  border-radius: 50%;
+  z-index: 1000;
 }
 
-.date {
-  margin-top: 12px;
-  font-size: 1.75em;
+.hour,
+.min,
+.sec {
+  position: absolute;
 }
+
+.hr {
+  width: 160px;
+  height: 160px;
+}
+
+.mn {
+  width: 190px;
+  height: 190px;
+}
+
+.sc {
+  width: 230px;
+  height: 230px;
+}
+
+.hr,
+.mn,
+.sc {
+  display: flex;
+  justify-content: center;
+}
+
+.hr::before {
+  content: "";
+  width: 8px;
+  height: 80px;
+  background-color: #ff105e;
+  z-index: 100;
+  border-radius: 5px;
+}
+
+.mn::before {
+  content: "";
+  width: 6px;
+  height: 90px;
+  background-color: rgb(15, 105, 207);
+  z-index: 11;
+  border-radius: 5px;
+}
+
+.sc::before {
+  content: "";
+  width: 2px;
+  height: 140px;
+  background-color: #fff;
+  z-index: 10;
+  border-radius: 5px;
+}
+
 </style>
+</head>
+<body>
+  <div class="clock">
+   <div class="hour">
+     <div class="hr" id="hr"></div>
+   </div>
+   <div class="min">
+     <div class="mn" id="mn"></div>
+   </div>
+   <div class="sec">
+     <div class="sc" id="sc"></div>
+   </div>
+ </div>
+<script>
+ const deg = 6; //360deg / 60(min||sec) => 6
+const hr = document.querySelector("#hr");
+const mn = document.querySelector("#mn");
+const sc = document.querySelector("#sc");
 
-<div class="datetime">
-  <div class="time"></div>
-  <div class="date"></div>
-</div>
+setInterval(() => {
+  let day = new Date();
+  let hh = day.getHours() * 30; //360deg / 12 hour => 30
+  let mm = day.getMinutes() * deg;
+  let ss = day.getSeconds() * deg;
+
+  hr.style.transform = `rotateZ(${hh + mm / 12}deg)`;
+  mn.style.transform = `rotateZ(${mm}deg)`;
+  sc.style.transform = `rotateZ(${ss}deg)`;
+});
+
+</script>
+
+</body>
+</html> 
+
